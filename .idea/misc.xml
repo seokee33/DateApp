@@ -4,13 +4,23 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/bg_main_search.xml" value="0.196" />
-        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_main.xml" value="0.16033755274261605" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/bg_more.xml" value="0.233" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/bg_research.xml" value="0.366" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/ic_baseline_replay_24.xml" value="0.367" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.367" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.376171875" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_login.xml" value="0.36614583333333334" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_sign_up.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/more_fragment.xml" value="0.33" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/side_menu.xml" value="0.36614583333333334" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/side_menu_header.xml" value="0.18" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/menu/drawer_side_menu.xml" value="0.21510416666666668" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/xml/network_security_config.xml" value="0.2942708333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

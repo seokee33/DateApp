@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id = "@+id/btn_AddLocation"
+        android:icon = "@drawable/ic_baseline_add_location_24"
+        android:title = "@string/side_menu_addLocation"
+        />
+</menu>

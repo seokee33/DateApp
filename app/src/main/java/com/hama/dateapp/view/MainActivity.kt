@@ -10,13 +10,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
+import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,13 +33,18 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.navigation.NavigationView
 import com.hama.dateapp.R
+import com.hama.dateapp.database.FirebaseDB
 import com.hama.dateapp.databinding.ActivityMainBinding
+import com.hama.dateapp.viewmodel.PlaceItemViewModel
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity()
                         ,GoogleMap.OnMyLocationButtonClickListener
                         ,GoogleMap.OnMyLocationClickListener
-                        ,OnMapReadyCallback {
+                        ,GoogleMap.OnCameraMoveListener
+                        ,OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var binding: ActivityMainBinding
 
@@ -44,11 +56,13 @@ class MainActivity : AppCompatActivity()
     private lateinit var mMap: GoogleMap
     lateinit var mapFragment: SupportMapFragment
 
+
+
     //현위치 가져오기
     private var mFusedLocationProviderClient: FusedLocationProviderClient? =
         null // 현재 위치를 가져오기 위한 변수
     lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
-    lateinit var mLocationRequest: com.google.android.gms.location.LocationRequest // 위치 정보 요청의 매개변수를 저장하는
+    private lateinit var mLocationRequest: LocationRequest  // 위치 정보 요청의 매개변수를 저장하는
     private val REQUEST_PERMISSION_LOCATION = 10
 
 
@@ -56,6 +70,14 @@ class MainActivity : AppCompatActivity()
     private lateinit var fragmentManager: FragmentManager
     private lateinit var fragmentTransaction: FragmentTransaction
     private lateinit var moreFragment: MoreFragment
+
+
+    //Drawable
+//    private lateinit var drawerLayout: DrawerLayout
+//    private lateinit var drawerView: View
+
+    //데이터
+    private val viewModel: PlaceItemViewModel by viewModels()//데이터
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,12 +89,20 @@ class MainActivity : AppCompatActivity()
             startLocationUpdates()
         }
 
+        //지도
+        mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+
+
         //BottomSheet
         fragmentManager = supportFragmentManager
         fragmentTransaction = fragmentManager.beginTransaction()
         moreFragment = MoreFragment()
 
         // 현재 접힌 상태에서의 BottomSheet 귀퉁이의 둥글기 저장
+
         val cornerRadius = binding.bottomSheet.radius
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         bottomSheetBehavior.setBottomSheetCallback(object :
@@ -81,8 +111,8 @@ class MainActivity : AppCompatActivity()
                 // 상태가 변함에 따라서 할일들을 적어줍니다.
                 if (newState == STATE_EXPANDED) {
                     backPressedState = 1
-                    fragmentTransaction.add(R.id.fragment, moreFragment)
-                    fragmentTransaction.commit()
+                    fragmentTransaction = supportFragmentManager.beginTransaction()
+                    fragmentTransaction.replace(R.id.fragment, moreFragment).commit()
                 } else if (newState == STATE_COLLAPSED) {
                     backPressedState = 0
                 }
@@ -104,36 +134,50 @@ class MainActivity : AppCompatActivity()
         })
 
 
-        //지도
-        mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-
-        mLocationRequest = LocationRequest.create().apply {
-
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        //drawerLayout
+        binding.btnSideMenu.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        try {
+            var view:View = binding.mainNavigationView.getHeaderView(0)
+            var textview: TextView = view.findViewById<View>(R.id.tv_UserInfoName) as TextView
+            textview.text = FirebaseDB.getUserInfo()?.apply {
+                this.name
+            }.toString()
+        }catch (e : Exception){
+            Log.w("eeeeeeeeeeeeeeeee",e.toString())
+        }
+
+        binding.mainNavigationView.setNavigationItemSelectedListener(this)
 
 
-
-
+        //데이터
+        viewModel.selectedItem.observe(this, Observer { item ->
+            // 획득한 아이템에 대한 액션 지정
+            Toast.makeText(this, "item : $item", Toast.LENGTH_SHORT).show()
+        })
     }
 
     /**지도*/
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        mMap.isMyLocationEnabled = true
-        mMap.setOnMyLocationButtonClickListener(this)
-        mMap.setOnMyLocationClickListener(this)
+        if(checkPermissionForLocation(this)){
+            mMap.isMyLocationEnabled = true
+            mMap.setOnMyLocationButtonClickListener(this)
+            mMap.setOnMyLocationClickListener(this)
+        }
+        mMap.setOnCameraMoveListener(this)
+//        mMap.setMinZoomPreference(10.0f);
+        mMap.setMaxZoomPreference(15.0f);
         startLocationUpdates()  //초기값으로 현위치로 카메라 이동
         mapFragment.view?.findViewById<View>(Integer.parseInt("1"))?.also { it ->
             (it.parent as View).findViewById<View>(Integer.parseInt("2")).also {
                 it.updatePadding(top = 150)
             }
         }
+
     }
 
     /** 현재위치 마커 클릭시*/
@@ -149,7 +193,11 @@ class MainActivity : AppCompatActivity()
         }
         return false
     }
+    /**카메라 이동시*/
+    override fun onCameraMove() {
+        Log.w("onCameraMove_Location","lati : "+mMap.cameraPosition.target.latitude+", lonti : "+mMap.cameraPosition.target.longitude)
 
+    }
 
     /**현위치 가져오기*/
     @SuppressLint("MissingPermission")
@@ -166,6 +214,9 @@ class MainActivity : AppCompatActivity()
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return
+        }
+        mLocationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         // 기기의 위치에 관한 정기 업데이트를 요청하는 메서드 실행
         // 지정한 루퍼 스레드(Looper.myLooper())에서 콜백(mLocationCallback)으로 위치 업데이트를 요청
@@ -214,6 +265,7 @@ class MainActivity : AppCompatActivity()
     }
 
     // 사용자에게 권한 요청 후 결과에 대한 처리 로직
+    @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -222,8 +274,10 @@ class MainActivity : AppCompatActivity()
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_LOCATION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mMap.isMyLocationEnabled = true
+                mMap.setOnMyLocationButtonClickListener(this)
+                mMap.setOnMyLocationClickListener(this)
                 startLocationUpdates()
-
             } else {
                 Log.d("ttt", "onRequestPermissionsResult() _ 권한 허용 거부")
                 Toast.makeText(this, "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
@@ -238,7 +292,11 @@ class MainActivity : AppCompatActivity()
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         if (bottomSheetBehavior.state == STATE_EXPANDED) {
             bottomSheetBehavior.setState(STATE_COLLAPSED)
-        } else {
+        }else if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
+            binding.drawerLayout.closeDrawers()
+            // 테스트를 위해 뒤로가기 버튼시 Toast 메시지
+            Toast.makeText(this,"back btn clicked",Toast.LENGTH_SHORT).show()
+        }else {
             if (doubleBackToExit) {
                 finishAffinity()
             } else {
@@ -254,5 +312,17 @@ class MainActivity : AppCompatActivity()
     private fun runDelayed(millis: Long, function: () -> Unit) {
         Handler(Looper.getMainLooper()).postDelayed(function, millis)
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.btn_AddLocation->{
+                Log.w("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD","ddddddddddddddddddddddddddd")
+                Toast.makeText(this,"AddLocation",Toast.LENGTH_SHORT).show()
+            }
+        }
+        return false
+    }
+
+
 
 }
