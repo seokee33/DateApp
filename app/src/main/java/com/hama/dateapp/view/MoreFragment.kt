@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hama.dateapp.databinding.MoreFragmentBinding
-import com.hama.dateapp.model.PlaceInfo
+import com.hama.dateapp.dto.PlaceInfo
 import com.hama.dateapp.viewmodel.PlaceItemViewModel
 
 class MoreFragment : Fragment() {

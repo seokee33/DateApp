@@ -3,6 +3,7 @@ package com.hama.dateapp.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -37,14 +38,15 @@ import com.google.android.material.navigation.NavigationView
 import com.hama.dateapp.R
 import com.hama.dateapp.database.FirebaseDB
 import com.hama.dateapp.databinding.ActivityMainBinding
+import com.hama.dateapp.util.GetMyLocation
 import com.hama.dateapp.viewmodel.PlaceItemViewModel
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity()
-                        ,GoogleMap.OnMyLocationButtonClickListener
-                        ,GoogleMap.OnMyLocationClickListener
-                        ,GoogleMap.OnCameraMoveListener
-                        ,OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+    ,GoogleMap.OnMyLocationButtonClickListener
+    ,GoogleMap.OnMyLocationClickListener
+    ,GoogleMap.OnCameraMoveListener
+    ,OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var binding: ActivityMainBinding
 
@@ -152,11 +154,12 @@ class MainActivity : AppCompatActivity()
         binding.mainNavigationView.setNavigationItemSelectedListener(this)
 
 
-        //데이터
+        //더보기 데이터
         viewModel.selectedItem.observe(this, Observer { item ->
             // 획득한 아이템에 대한 액션 지정
             Toast.makeText(this, "item : $item", Toast.LENGTH_SHORT).show()
         })
+        Log.w("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!","Location : "+ GetMyLocation.getInstance(this).getLocation()?.latitude.toString()+" , "+ GetMyLocation.getInstance(this).getLocation()?.longitude.toString());
     }
 
     /**지도*/
@@ -316,6 +319,7 @@ class MainActivity : AppCompatActivity()
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.btn_AddLocation->{
+                val intent: Intent = Intent(this,AddLocation::class.java)
                 Log.w("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD","ddddddddddddddddddddddddddd")
                 Toast.makeText(this,"AddLocation",Toast.LENGTH_SHORT).show()
             }

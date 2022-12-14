@@ -3,7 +3,7 @@ package com.hama.dateapp.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.hama.dateapp.model.PlaceInfo
+import com.hama.dateapp.dto.PlaceInfo
 
 class PlaceItemViewModel : ViewModel() {
     private val mutableSelectedItem = MutableLiveData<PlaceInfo>()

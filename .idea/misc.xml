@@ -6,13 +6,18 @@
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/bg_main_search.xml" value="0.196" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/bg_more.xml" value="0.233" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/bg_research.xml" value="0.366" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/ic_baseline_add_location_24.xml" value="0.367" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/ic_baseline_replay_24.xml" value="0.367" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.367" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/drawable/layout_address_dialog.xml" value="0.285" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.376171875" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_add_location.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_login.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/activity_sign_up.xml" value="0.36614583333333334" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/dialog_add_address.xml" value="0.28072916666666664" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/more_fragment.xml" value="0.33" />
+        <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/rv_addlocation_item.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/side_menu.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/layout/side_menu_header.xml" value="0.18" />
         <entry key="..\:/workspace/Android/DateApp/app/src/main/res/menu/drawer_side_menu.xml" value="0.21510416666666668" />

@@ -4,10 +4,10 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.hama.dateapp.model.UserInfo
+import com.hama.dateapp.dto.UserInfo
 
 object FirebaseDB {
-    private val TAG:String="FireBaseDB"
+    private val TAG: String = "FireBaseDB"
 
     fun getUserInfo(): UserInfo? {
         val db = Firebase.firestore
@@ -28,8 +28,13 @@ object FirebaseDB {
                     }
                 }
                 .addOnFailureListener {
-                    Log.w(TAG,"getUserInfo_Data가져오기 실패")
+                    Log.w(TAG, "getUserInfo_Data가져오기 실패")
                 }
             return userInfo
         }
-    }}
+    }
+
+    fun insertAddLocation(){
+
+    }
+}
